@@ -13,8 +13,13 @@
 #include "stdafx.h"
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "corrector.h"
 #define DEBUG 0
+
+int esEspacioBlanco(char c) {
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0' || c == '.' || c == ',' || c == '(' || c == ')' || c == ';';
+}
 
 //Funciones publicas del proyecto
 /*****************************************************************************************************************
@@ -31,67 +36,91 @@ void	Diccionario(char* szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[
 	char wdetec[200];
 	int cont, contp, iNumE;
 	iNumElementos = 0;
-	iEstadisticas = 0;
-
-	if (DEBUG == 1)
-		printf("%s", szNombre);
 
 	fopen_s(&fpDict, szNombre, "r");
 
 	if (fpDict != NULL)
 	{
-		if (DEBUG == 1)
-			printf("\nSi abrio el archivo\n");
-
 		iNumE = 0;
 		contp = 0;
-
-		while (fgets(texto, sizeof(texto), fpDict) != NULL)
+		while (!feof(fpDict))
 		{
-			
+			fgets(texto, sizeof(texto), fpDict);
+
 			for (cont = 0; cont < strlen(texto); cont++)
 			{
-				if (texto[cont] == ' ' && (cont == 0 || texto[cont - 1] != ' '))
+				if (cont > 0 && (texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0' || texto[cont] == '.' || texto[cont] == ',' || texto[cont] == '(' || texto[cont] == ')' || texto[cont] == ';') && cont > 0 && !esEspacioBlanco(texto[cont - 1]))
 				{
 					wdetec[contp] = '\0';
 					_strlwr_s(wdetec);
-					strcpy_s(szPalabras[iNumE], TAMTOKEN, wdetec);
-					if (DEBUG == 1)
+					int palabraExistente = 0;
+					for (int i = 0; i < iNumE; i++)
 					{
-						_strlwr_s(wdetec);
-						printf("\n%s", wdetec);
+						if (strcmp(szPalabras[i], wdetec) == 0)
+						{
+							iEstadisticas[i]++;
+							palabraExistente = 1;
+							break;
+						}
+					}
+
+					if (!palabraExistente)
+					{
+						strcpy_s(szPalabras[iNumE], TAMTOKEN, wdetec);
+						iEstadisticas[iNumE] = 1;
+						iNumE++;
 					}
 					contp = 0;
-					iNumE++;
 				}
 				else
 				{
-					if (texto[cont] != ',' && texto[cont] != '.' && texto[cont] != '(' && texto[cont] != ')' && texto[cont] != ' ')
+					if (!(texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0') && texto[cont] != ',' && texto[cont] != '.' && texto[cont] != '(' && texto[cont] != ')' && texto[cont] != ';')
+
 					{
 						wdetec[contp] = texto[cont];
 						contp++;
 					}
 				}
 			}
-			if (texto[strlen(texto) - 1] != ' ')
+			if (cont > 0 && !(texto[strlen(texto) - 1] == ' ' || texto[strlen(texto) - 1] == '\t' || texto[strlen(texto) - 1] == '\n' || texto[strlen(texto) - 1] == '\r' || texto[strlen(texto) - 1] == '\0' || texto[strlen(texto) - 1] == '.'))
 			{
 				wdetec[contp] = '\0';
-				_strlwr_s(wdetec);
-				strcpy_s(szPalabras[iNumE], TAMTOKEN, wdetec);
-				iNumE++;
-				if (DEBUG == 1)
+				int palabraExistente = 0;
+				for (int i = 0; i < iNumE; i++)
 				{
-					_strlwr_s(wdetec);
-					printf("\n%s", wdetec);
+					if (strcmp(szPalabras[i], wdetec) == 0)
+					{
+						iEstadisticas[i]++;
+						palabraExistente = 1;
+						break;
+					}
 				}
+
+				if (!palabraExistente)
+				{
+					strcpy_s(szPalabras[iNumE], TAMTOKEN, wdetec);
+					iEstadisticas[iNumE] = 1;
+					iNumE++;
+				}
+				contp = 0;
 			}
 		}
 		iNumElementos = iNumE;
 
-
-		if (DEBUG == 1)
-			printf("\nNum de elementos: %i\n", iNumE);
-			fclose(fpDict);
+		//bubble sort
+		int cont1, cont2, auxi, i;
+		char aux[TAMTOKEN];
+		for (cont1 = 0; cont1 < iNumElementos - 1; cont1++)
+			for(cont2 = 0; cont2 < iNumElementos - 1; cont2++)
+				if (strcmp(szPalabras[cont2], szPalabras[cont2 + 1]) > 0)
+				{
+					strcpy_s(aux, TAMTOKEN, szPalabras[cont2]);
+					strcpy_s(szPalabras[cont2], TAMTOKEN, szPalabras[cont2 + 1]);
+					strcpy_s(szPalabras[cont2 + 1], TAMTOKEN, aux);
+					auxi = iEstadisticas[cont2];
+					iEstadisticas[cont2] = iEstadisticas[cont2 + 1];
+					iEstadisticas[cont2 + 1] = auxi;
+				}
 	}
 	else
 	{
