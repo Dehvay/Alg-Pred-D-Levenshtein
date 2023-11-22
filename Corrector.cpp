@@ -170,7 +170,49 @@ void	ClonaPalabras(
 	char	szPalabrasSugeridas[][TAMTOKEN], 	//Lista de palabras clonadas
 	int &	iNumSugeridas)						//Numero de elementos en la lista
 {
-	//Sustituya estas lineas por su código
-	strcpy(szPalabrasSugeridas[0], szPalabraLeida); //lo que sea que se capture, es sugerencia
-	iNumSugeridas = 1;							//Una sola palabra sugerida
+
+	char aux2[TAMTOKEN];
+	int cont, cont2, contp = 0;
+	iNumSugeridas = 0;
+	char dict[38] = "abcdefghijklmnñopqrstuwxyzáéíóú";
+
+
+	strcpy_s(aux2, szPalabraLeida);
+	
+	for (cont = 0; cont < strlen(szPalabraLeida) && strlen(szPalabraLeida) != 1; cont++)
+	{
+		for (cont2 = 0; cont2 < strlen(szPalabraLeida); cont2++)
+		{
+			if (cont2 != cont)
+			{
+				aux2[contp++] = szPalabraLeida[cont2];
+			}
+		}
+		aux2[contp] = '\0';
+
+		strcpy_s(szPalabrasSugeridas[iNumSugeridas++], aux2);
+
+		strcpy_s(aux2, szPalabraLeida);
+		contp = 0;
+	}
+
+	for (cont = 0; cont < strlen(szPalabraLeida) - 1; cont++)
+	{
+		aux2[cont] = szPalabraLeida[cont + 1];
+		aux2[cont + 1] = szPalabraLeida[cont]; 
+
+		strcpy_s(szPalabrasSugeridas[iNumSugeridas++], aux2); 
+		strcpy_s(aux2, szPalabraLeida); 
+	}
+	strcpy_s(szPalabrasSugeridas[iNumSugeridas++], szPalabraLeida);
+
+	for (cont = 0; cont < strlen(szPalabraLeida); cont++)
+	{
+		for (cont2 = 0; cont2 < strlen(dict); cont2++)
+		{
+			aux2[cont] = dict[cont2];
+			strcpy_s(szPalabrasSugeridas[iNumSugeridas++], aux2);
+		}
+		aux2[cont] = szPalabraLeida[cont];
+	}
 }
