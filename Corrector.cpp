@@ -208,7 +208,23 @@ void	ClonaPalabras(
 
 	for (cont = 0; cont < strlen(szPalabraLeida); cont++)
 	{
-		for (cont2 = 0; cont2 < strlen(dict); cont2++)
+		for (cont2 = 0; cont2 < 32; cont2++)
+		{
+			aux2[cont] = dict[cont2];
+			strcpy_s(szPalabrasSugeridas[iNumSugeridas++], aux2);
+		}
+		aux2[cont] = szPalabraLeida[cont];
+	}
+
+	for (cont = 1; cont < strlen(szPalabraLeida) + 1; cont++)
+	{
+		aux2[cont] = szPalabraLeida[cont - 1];
+	}
+	aux2[cont] = '\0';
+
+	for (cont = 0; cont < strlen(szPalabraLeida) + 1; cont++)
+	{
+		for (cont2 = 0; cont2 < 32; cont2++)
 		{
 			aux2[cont] = dict[cont2];
 			strcpy_s(szPalabrasSugeridas[iNumSugeridas++], aux2);
