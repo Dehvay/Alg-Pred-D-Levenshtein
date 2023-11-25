@@ -153,7 +153,8 @@ void	ListaCandidatas		(
 	int &	iNumLista)							//Numero de elementos en la szListaFinal
 {
 	iNumLista = 0;
-	int cont, cont2, palabraRepetida = 0, cont3;
+	int cont, cont2, palabraRepetida = 0, cont3, auxp;
+	char auxf[TAMTOKEN];
 
 	for (cont = 0; cont < iNumSugeridas; cont++)
 	{
@@ -180,6 +181,18 @@ void	ListaCandidatas		(
 			}
 		}
 	}
+
+	for (cont = 0; cont < iNumLista - 1; cont++)
+		for (cont2 = 0; cont2 < iNumLista - 1; cont2++)
+			if (iPeso[cont2] < iPeso[cont2 + 1])
+			{
+				strcpy_s(auxf, TAMTOKEN, szListaFinal[cont2 + 1]);
+				strcpy_s(szListaFinal[cont2 + 1], TAMTOKEN, szListaFinal[cont2]);
+				strcpy_s(szListaFinal[cont2], TAMTOKEN, auxf);
+				auxp = iPeso[cont2 + 1];
+				iPeso[cont2 + 1] = iPeso[cont2];
+				iPeso[cont] = auxp;
+			}
 
 }
 
