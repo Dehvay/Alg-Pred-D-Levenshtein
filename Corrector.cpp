@@ -3,7 +3,7 @@
 	FACULTAD DE ESTUDIOS SUPERIORES -ARAGON-
 
 	Computadoras y programacion. 
-	(c) Ponga su nombre y numero de cuenta aqui.
+	(Diego Yavhed Medinilla Gonzalez 424016797) Ponga su nombre y numero de cuenta aqui.
 	
 	Quiso decir: Programa principal de la aplicacion de la distancia de Levenstein.
 	
@@ -21,7 +21,6 @@ int esEspacioBlanco(char c) {
 	return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\0' || c == '.' || c == ',' || c == '(' || c == ')' || c == ';';
 }
 
-
 //Funciones publicas del proyecto
 /*****************************************************************************************************************
 	DICCIONARIO: Esta funcion crea el diccionario completo
@@ -33,8 +32,8 @@ int esEspacioBlanco(char c) {
 void	Diccionario(char* szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[], int& iNumElementos)
 {
 	FILE* fpDict;
-	char texto[4000];
-	char wdetec[200];
+	char texto[NUMPALABRAS];
+	char wdetec[TAMTOKEN];
 	int cont, contp, iNumE, ltexto, i;
 	iNumElementos = 0;
 
@@ -44,14 +43,14 @@ void	Diccionario(char* szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[
 	{
 		iNumE = 0;
 		contp = 0;
-		while (!feof(fpDict))
+		while (fgets(texto, sizeof(texto), fpDict) != NULL)
 		{
-			fgets(texto, sizeof(texto), fpDict);
 			ltexto = strlen(texto);
 
 			for (cont = 0; cont < ltexto; cont++)
 			{
-				if (cont > 0 && (texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0' || texto[cont] == '.' || texto[cont] == ',' || texto[cont] == '(' || texto[cont] == ')' || texto[cont] == ';') && !esEspacioBlanco(texto[cont - 1]))
+				if (cont > 0 && (texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0' || texto[cont] == '.' 
+					|| texto[cont] == ',' || texto[cont] == '(' || texto[cont] == ')' || texto[cont] == ';') && !esEspacioBlanco(texto[cont - 1]))
 				{
 					wdetec[contp] = '\0';
 					int palabraExistente = 0;
@@ -75,8 +74,8 @@ void	Diccionario(char* szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[
 				}
 				else
 				{
-					if (!(texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0') && texto[cont] != ',' && texto[cont] != '.' && texto[cont] != '(' && texto[cont] != ')' && texto[cont] != ';')
-
+					if (!(texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0') && texto[cont] != ',' && texto[cont] != '.' 
+						&& texto[cont] != '(' && texto[cont] != ')' && texto[cont] != ';')
 					{
 						texto[cont] = tolower(texto[cont]);
 						wdetec[contp] = texto[cont];
@@ -84,8 +83,10 @@ void	Diccionario(char* szNombre, char szPalabras[][TAMTOKEN], int iEstadisticas[
 					}
 				}
 			}
-			if (cont > 0 && (texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0' || texto[cont] == '.' || texto[cont] == ',' || texto[cont] == '(' || texto[cont] == ')' || texto[cont] == ';') && !esEspacioBlanco(texto[cont - 1])) {
+			if (cont > 0 && (texto[cont] == ' ' || texto[cont] == '\t' || texto[cont] == '\n' || texto[cont] == '\r' || texto[cont] == '\0' || texto[cont] == '.' || texto[cont] == ',' 
+				|| texto[cont] == '(' || texto[cont] == ')' || texto[cont] == ';') && !esEspacioBlanco(texto[cont - 1])) {
 				wdetec[contp] = '\0';
+				wdetec[contp] = tolower(wdetec[contp]);
 				int palabraExistente = 0;
 				for (i = 0; i < iNumE; i++)
 				{
@@ -176,7 +177,6 @@ void	ListaCandidatas		(
 					strcpy_s(szListaFinal[iNumLista], szPalabrasSugeridas[cont]);
 					iPeso[iNumLista++] = iEstadisticas[cont2];
 				}
-
 				palabraRepetida = 0;
 			}
 		}
@@ -217,7 +217,7 @@ void	ClonaPalabras(
 	strcpy_s(aux2, TAMTOKEN, szPalabraLeida);
 	npalabra = strlen(szPalabraLeida);
 
-	for (cont = 0; cont < npalabra && npalabra != 1; cont++)
+	for (cont = 0; cont < npalabra; cont++)
 	{
 		for (cont2 = 0; cont2 < npalabra; cont2++)
 		{
@@ -229,7 +229,6 @@ void	ClonaPalabras(
 		aux2[contp] = '\0';
 
 		strcpy_s(szPalabrasSugeridas[iNumSugeridas++], TAMTOKEN, aux2);
-
 		strcpy_s(aux2, TAMTOKEN, szPalabraLeida);
 		contp = 0;
 	}
@@ -237,8 +236,7 @@ void	ClonaPalabras(
 	for (cont = 0; cont < npalabra - 1; cont++)
 	{
 		aux2[cont] = szPalabraLeida[cont + 1];
-		aux2[cont + 1] = szPalabraLeida[cont]; 
-
+		aux2[cont + 1] = szPalabraLeida[cont];
 		strcpy_s(szPalabrasSugeridas[iNumSugeridas++], TAMTOKEN, aux2); 
 		strcpy_s(aux2, TAMTOKEN, szPalabraLeida); 
 	}
@@ -269,7 +267,6 @@ void	ClonaPalabras(
 		}
 		aux2[cont] = szPalabraLeida[cont];
 	}
-
 
 	for (cont = 0; cont < iNumSugeridas - 1; cont++) 
 		for (cont2 = 0; cont2 < iNumSugeridas - 1; cont2++) 
