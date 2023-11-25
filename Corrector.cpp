@@ -153,7 +153,7 @@ void	ListaCandidatas		(
 	int &	iNumLista)							//Numero de elementos en la szListaFinal
 {
 	iNumLista = 0;
-	int cont, cont2, cont3, band;
+	int cont, cont2, palabraRepetida = 0, cont3;
 
 	for (cont = 0; cont < iNumSugeridas; cont++)
 	{
@@ -161,19 +161,22 @@ void	ListaCandidatas		(
 		{
 			if (strcmp(szPalabrasSugeridas[cont], szPalabras[cont2]) == 0)
 			{
-				band = 0;
-
-				for (cont3 = 0; cont3 < iNumLista && !band; cont3++)
+				for (cont3 = 0; cont3 < iNumLista; cont3++)
 				{
-					if (strcmp(szListaFinal[cont3], szPalabras[cont2]) == 0)
-						band = 1;
+					if (strcmp(szPalabrasSugeridas[cont], szListaFinal[cont3]) == 0)
+					{
+						palabraRepetida = 1;
+						break;
+					}
 				}
-				
-				if (!band)
+
+				if (!palabraRepetida)
 				{
 					strcpy_s(szListaFinal[iNumLista], szPalabrasSugeridas[cont]);
 					iPeso[iNumLista++] = iEstadisticas[cont2];
 				}
+
+				palabraRepetida = 0;
 			}
 		}
 	}
