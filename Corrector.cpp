@@ -217,7 +217,7 @@ void	ClonaPalabras(
 	strcpy_s(aux2, TAMTOKEN, szPalabraLeida);
 	npalabra = strlen(szPalabraLeida);
 
-	for (cont = 0; cont < npalabra; cont++)
+	for (cont = 0; cont < npalabra && npalabra != 1; cont++)
 	{
 		for (cont2 = 0; cont2 < npalabra; cont2++)
 		{
